@@ -1,0 +1,14 @@
+//admin api 
+@url= http://localhost:8000/api/v1
+
+POST {{url}}/admin/register
+Content-type:application/json
+
+{  
+"address": "unit 24 / 323 forest road",
+"email": "sddf@gmail.com",
+"fName": "sdf",
+"lName": "sdf",
+"password": "123",
+"phone": "0416881277"
+}
