@@ -1,53 +1,58 @@
 import express from 'express'
-import { newAdminValidation } from '../middlewares/joimiddleware.js';
-import { createNewAdmin } from '../model/admin/AdminModel.js';
+import { emailVerificationValidation, newAdminValidation } from '../middlewares/joimiddleware.js';
+import { createNewAdmin, updateAdmin } from '../model/admin/AdminModel.js';
 import { hashPassword } from '../utils/bcrypt.js';
+
 const router = express.Router();
 import { v4 as uuidv4 } from 'uuid';
 import { newAccountEmailVerificationEmail } from '../utils/nodemailer.js';
-//admin user login
-router.post("/", (res,req,next)=>{
-    try{
-        res.json({
-            status: "success",
-            message: "todo register",
-        })
-    }catch(error){
-        next(error)
+
+
+
+//admin user loging
+router.post("/", (req, res, next) => {
+    try {
+      res.json({
+        status: "success",
+        message: "todo login",
+      });
+    } catch (error) {
+      next(error);
     }
-});
+  });
+  
+ // admin user email verification
+router.post("/verify", emailVerificationValidation, async (req, res, next) => {
+  try {
+    // chek if the combination of email and code exist in db if so set the status active and code to "" in the db, also update is email verified to true
 
-//admin user regisation 
-router.post("/register", newAdminValidation,async (req, res, next)=>{
-    try{
-        req.body.password = hashPassword(req.body.password);
-        const emailVerificationCode = uuidv4();
-        const result = await createNewAdmin(req.body);
-        
-        if(result?._id){
-            const uniqueLink = `http://localhost:3000/verify?c=${result.emailVerificationCode}&email=${result.emaill}`;
-            newAccountEmailVerificationEmail(uniqueLink, result)
-            res.json({
-                status: "success",
-                message: "new user has been registered",
-            })
+    const obj = {
+      status: "active",
+      isEmailVerified: true,
+      emailVerificationCode: "",
+    };
 
-            return;
+    const user = await updateAdmin(req.body, obj);
 
-        }
+    if (user?._id) {
+      //send email notification
+      emailVerifiedNotification(user);
 
-        res.json({
-            status: "success",
-            message: "Error, unable to create new user",
-        })
-    }catch(error){
-        
-            if (error.message.includes("E11000 duplicate key")) {
-              error.message = "There is another user exist with this email";
-              error.errorCode = 200;
-            } 
-        next(error)
+      res.json({
+        status: "success",
+        message: "Your account has been verified. You may login now",
+      });
+
+      return;
     }
-});
 
-export default router;
+    res.json({
+      status: "error",
+      message: "The link is invalid or expired.",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+  
+  export default router;

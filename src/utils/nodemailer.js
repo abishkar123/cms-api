@@ -6,7 +6,7 @@ const sendEmail = async (emailBody)=>{
     try{
         //config
         const transporter = nodemailer.createTransport({
-            host: process.env.STMP,
+            host: process.env.SMTP,
             port: 587,
             auth: {
                 user: process.env.EMAIL_USER,
@@ -14,43 +14,82 @@ const sendEmail = async (emailBody)=>{
             }
         });
 
-        // send email 
+      
+    //send email
+    const info = await transporter.sendMail(emailBody);
 
-const  info = await transporter.sendMail(emailBody);
-
-console.log("Message sent: %s", info.messageId);
-console.log("preview Url: %s", nodemailer.getTestMessageUrl(info));
-    }catch(error){
-    console.log(error)
-   }
-}
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // make email template and data ready
-
-export const newAccountEmailVerificationEmail= (link, obj)=>{
-    const emailBody={
-        from: `"coding shop", <${process.env.EMAIL_USER}>`,
-        to: process.env.EMAIL_USER,
-        subject: "Verify the your email",
-        text:`"please follow the link verify your account"+l{link}`,
-        html:`
+export const newAccountEmailVerificationEmail = (link, obj) => {
+  const emailBody = {
+    from: `"Coding Shop", <${obj.email}>`,
+    to: process.env.EMAIL_USER,
+    subject: "Verify your email",
+    text: "Plase follow the link to verify your account " + link,
+    html: `
+        <p>
+            Hi ${obj.fName}
+        </p>
+        <br />
         
+        <p>
+          Please follow the link below to verify your new account
+        </p>
+        <br >
 <p>
-Hi${obj.fmame}
+                Hi 
+              <br> Please verify your email address.
+              
+                <a href= ${link} > ${link} </a>
+    </p>
+    <br >
+    <p>
+    Regards, 
+    <br>
+   Abishkar Rai team
 </p>
-<p>
-please follow the link to verify your new account
-</p>
-<br>
-<p>
-hi <a href=${link}>${link}   </a></p>
-<br>
-<p>
-coding hope </p>
-        
-        
         `,
-    };
-    sendEmail(emailBody)
-}
+  };
 
+  sendEmail(emailBody);
+};
+
+// make email template and data ready
+export const emailverifiedotification = ({fName, email}) => {
+  const emailBody = {
+    from: `"Coding Shop", <${obj.email}>`,
+    to: process.env.EMAIL_USER,
+    subject: "Verify your email",
+    text: "Plase follow the link to verify your account " + link,
+    html: `
+        <p>
+            Hi ${obj.fName}
+        </p>
+        <br />
+        
+        <p>
+          Please follow the link below to verify your new account
+        </p>
+        <br >
+<p>
+                Hi 
+              <br> Please verify your email address.
+              
+                <a href= ${process.env.FRONTEND_ROOT_URL} /login> > ${link} </a>
+    </p>
+    <br >
+    <p>
+    Regards, 
+    <br>
+   Abishkar Rai team
+</p>
+        `,
+  };
+
+  sendEmail(emailBody);
+};
