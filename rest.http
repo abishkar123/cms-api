@@ -5,10 +5,12 @@ POST {{url}}/admin/register
 Content-type:application/json
 
 {  
-"address": "unit 24 / 323 forest road",
-"email": "sddf@gmail.com",
+"address": "",
+"email": "s@gmail.com",
 "fName": "sdf",
 "lName": "sdf",
-"password": "123",
-"phone": "0416881277"
+"password": "1233",
+
+
+"phone": null
 }
