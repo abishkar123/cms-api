@@ -1,7 +1,7 @@
 import express from 'express'
-import { emailVerificationValidation, newAdminValidation } from '../middlewares/joimiddleware.js';
-import { createNewAdmin, updateAdmin } from '../model/admin/AdminModel.js';
-import { hashPassword } from '../utils/bcrypt.js';
+import { emailVerificationValidation, loginValidation, newAdminValidation } from '../middlewares/joimiddleware.js';
+import { createNewAdmin, findUse, updateAdmin } from '../model/admin/AdminModel.js';
+import { comparePassword, hashPassword } from '../utils/bcrypt.js';
 
 const router = express.Router();
 import { v4 as uuidv4 } from 'uuid';
@@ -91,4 +91,41 @@ router.post("/verify", emailVerificationValidation, async (req, res, next) => {
   }
 });
   
+// login 
+
+router.post("/login", loginValidation, async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // find user by email
+    const user = await findUse({ email });
+    if (user?._id) {
+      // check if plain password and hashed password match
+      const isPassMatch = comparePassword(password, user.password);
+
+      //login successfull or invalid login details
+      if (isPassMatch) {
+        user.password = undefined;
+        user.__v = undefined;
+        res.json({
+          status: "success",
+          message: "Login success fully",
+          user,
+        });
+
+        return;
+      }
+    }
+
+    res.json({
+      status: "error",
+      message: "Invalid Login Details",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
   export default router;
