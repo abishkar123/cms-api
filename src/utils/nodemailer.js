@@ -76,7 +76,7 @@ export const emailVerifiedNotification = ({ fName, email }) => {
         </p>
         <br >
 <p>
-               <a href= "${process.env.FRONTEND_ROOT_URL}" style="background:green; color: white; padding:1rem 2.5px"> Login </a>
+ <a href= "${process.env.FRONTEND_ROOT_URL}" style="background:green; color: white; padding:1rem 2.5px"> Login </a>
     </p>
     <br >
     <p>

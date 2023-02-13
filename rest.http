@@ -6,7 +6,7 @@ Content-type:application/json
 
 {  
 "address": "",
-"email": "s@gmail.com",
+"email": "as@gmail.com",
 "fName": "sdf",
 "lName": "sdf",
 "password": "1233",
@@ -15,6 +15,19 @@ Content-type:application/json
 "phone": null
 }
 
-#verify user email
-#  http://localhost:3000/verify?
-c=49d1068b-72b0-427a-b43d-d073577439d6&email=ss@gmail.com
+
+###login apge
+
+POST {{url}}/admin/login
+Content-type:application/json
+
+{  
+
+"email": "sss@gmail.com",
+"password": "1234"
+
+
+}
+# #verify user email
+# #  http://localhost:3000/verify?
+# c=49d1068b-72b0-427a-b43d-d073577439d6&email=ss@gmail.com
