@@ -58,35 +58,31 @@ export const newAccountEmailVerificationEmail = (link, obj) => {
 
   sendEmail(emailBody);
 };
-
-// make email template and data ready
-export const emailverifiedotification = ({fName, email}) => {
+// email verified notification
+export const emailVerifiedNotification = ({ fName, email }) => {
   const emailBody = {
-    from: `"Coding Shop", <${obj.email}>`,
-    to: process.env.EMAIL_USER,
-    subject: "Verify your email",
-    text: "Plase follow the link to verify your account " + link,
+    from: `"Coding Shop", <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "Account verified",
+    text: "Your account has been verified. You may login now",
     html: `
         <p>
-            Hi ${obj.fName}
+            Hi ${fName}
         </p>
         <br />
         
         <p>
-          Please follow the link below to verify your new account
+        Your account has been verified. You may login now
         </p>
         <br >
 <p>
-                Hi 
-              <br> Please verify your email address.
-              
-                <a href= ${process.env.FRONTEND_ROOT_URL} /login> > ${link} </a>
+               <a href= "${process.env.FRONTEND_ROOT_URL}" style="background:green; color: white; padding:1rem 2.5px"> Login </a>
     </p>
     <br >
     <p>
     Regards, 
     <br>
-   Abishkar Rai team
+   Coding Shop customer care team
 </p>
         `,
   };

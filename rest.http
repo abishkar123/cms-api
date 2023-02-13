@@ -14,3 +14,7 @@ Content-type:application/json
 
 "phone": null
 }
+
+#verify user email
+#  http://localhost:3000/verify?
+c=49d1068b-72b0-427a-b43d-d073577439d6&email=ss@gmail.com
