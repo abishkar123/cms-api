@@ -31,3 +31,14 @@ Content-type:application/json
 # #verify user email
 # #  http://localhost:3000/verify?
 # c=49d1068b-72b0-427a-b43d-d073577439d6&email=ss@gmail.com
+
+##======== category api 
+
+### crate new api 
+# @catUrl={{url}}
+
+POST {{url}}/category
+Content-Type: application/json
+{
+    "name":"computer"
+}

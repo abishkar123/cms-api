@@ -1,5 +1,25 @@
 import Joi from "joi"
 
+// const joiValidation = e =>{
+// try{
+//   //condition
+//  const { }
+  
+//   error
+//   ?res.json({
+//       status:"error",
+//       message:"joi is error",
+//   })
+//   :next()
+//       }catch(error){ 
+//       next(error)}
+      
+// }
+
+
+ //======
+ 
+
 export const newAdminValidation = (req, res, next)=>{
     try{
 
@@ -59,6 +79,30 @@ export const emailVerificationValidation = (req, res, next) => {
       const schema = Joi.object({
         email: Joi.string().email({ minDomainSegments: 2 }),
         password: Joi.string().required(),
+      });
+  
+      //compair
+      const { error } = schema.validate(req.body);
+  
+      error
+        ? res.json({
+            status: "error",
+            message: error.message,
+          })
+        : next();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //otp 
+  export const passResetValidation = (req, res, next) => {
+    try {
+      //conditions
+      const schema = Joi.object({
+        email: Joi.string().email({ minDomainSegments: 2 }),
+        password: Joi.string().required(),
+        otp: Joi.string().required(),
       });
   
       //compair
