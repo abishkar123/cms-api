@@ -1,46 +1,56 @@
 import express from 'express'
 import slugify from 'slugify';
+import { updatCatValidation } from '../middlewares/joimiddleware.js';
 import { createNewCategory, deleteCat, readCategories, updateCategory } from '../model/category/CategoryModel.js';
 
 const router = express.Router()
 
 
 //create category
-router.post("/",async (req, res, next )=>{
-    try{
-        const {name}= req.body;
-       
-        const obj ={
-            name,
-            slug: slugify(name, {
-                lower: true,
-                trim: true,
-            })
+// create category
+router.post("/", async (req, res, next) => {
+    try {
+      const { name } = req.body;
+      if (name.length && typeof name === "string") {
+        const obj = {
+          name,
+          slug: slugify(name, {
+            lower: true,
+            trim: true,
+          }),
         };
-
+  
         const result = await createNewCategory(obj);
- if(result?._id){
-    res.json({
-            satatus:"success",
-            message:" new category has been creater "
-        })}
-
-        res.json({
-            satatus:"error",
-            message:" there no category you looking"
-        })
-
-    }catch(error){
-        if(error.message.including("E1000 duplicate key error collection"))
-        next(error);
+  
+        if (result?._id) {
+          return res.json({
+            status: "success",
+            message: "New Category has been created",
+            result,
+          });
+        }
+      }
+      res.json({
+        status: "error",
+        message: "Unable to create the category, Please try again later.",
+      });
+    } catch (error) {
+      if (error.message.includes("E11000 duplicate key error collection")) {
+        error.errorCode = 200;
+        error.message =
+          "This category has been alredy created, change the name and try again later";
+      }
+      next(error);
     }
-})
+  });
+
 //put category
 router.get("/",async (req, res, next )=>{
+    
     try{
         const cats = await readCategories();
         res.json({
-            satatus:"success",
+            status:"success",
             message:"Here is the cate lists",
             cats
         })
@@ -49,15 +59,23 @@ router.get("/",async (req, res, next )=>{
         next(error);
     }
 })
+
 //update category
-router.put("/", async(req, res, next )=>{
+router.put("/", updatCatValidation, async(req, res, next )=>{
     try{
         const result = await updateCategory(req.body);
 
-        res.json({
-            satatus:"success",
-            message:"the category has been updated"
-        })
+        if (result?._id) {
+            return res.json({
+              status: "success",
+              message: "The Category has been updated!",
+              result,
+            });
+          }
+          res.json({
+            status: "error",
+            message: "Unanble to upda the category, please try gain later",
+          });
 
     }catch(error){
         next(error);
@@ -67,11 +85,19 @@ router.put("/", async(req, res, next )=>{
 router.delete("/:_id?", async (req, res, next )=>{
     const {_id} = req.params
     const result = await deleteCat(_id)
-    try{
-        res.json({
-            satatus:"success",
-            message:"Category has been deleted "
-        })
+    
+  if (result?._id) {
+    return res.json({
+      status: "success",
+      message: "The category has been deleted successfully",
+    });
+  }
+
+  try {
+    res.json({
+      status: "error",
+      message: "Unable to delete the category, try again later",
+    });
     }catch(error){
         next(error);
     }

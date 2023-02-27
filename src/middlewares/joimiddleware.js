@@ -1,30 +1,26 @@
 import Joi from "joi"
 
-// const joiValidation = e =>{
-// try{
-//   //condition
-//  const { }
+const joiValidation = (schema, req, res, next) =>{
+try{
+  //condition
+ const { error} = schema.validate(req.body);
   
-//   error
-//   ?res.json({
-//       status:"error",
-//       message:"joi is error",
-//   })
-//   :next()
-//       }catch(error){ 
-//       next(error)}
+  error
+  ?res.json({
+      status:"error",
+      message:error.message,
+  })
+  :next()
+      }catch(error){ 
+      next(error)}
       
-// }
+};
 
 
- //======
- 
+ //====== Admin Valiadiation 
 
 export const newAdminValidation = (req, res, next)=>{
-    try{
-
-console.log(req.body, "joi")
-
+    
 //condition
 const schema = Joi.object({
 address: Joi.string().allow("", null),
@@ -34,24 +30,12 @@ lName:Joi.string().required(),
 password:Joi.string().required(),
 phone:Joi.string().allow("",null), 
 }) 
-
-//compair
-const {error}=schema.validate(req.body);
-
-error
-?res.json({
-    status:"error",
-    message:"joi is error",
-})
-:next()
-    }catch(error){
-    next(error)
-    }
+ joiValidation(schema, req, res, next)
 }
 
 
 export const emailVerificationValidation = (req, res, next) => {
-    try {
+    
       //conditions
       const schema = Joi.object({
         email: Joi.string().email({ minDomainSegments: 2 }),
@@ -59,45 +43,25 @@ export const emailVerificationValidation = (req, res, next) => {
       });
   
       //compair
-      const { error } = schema.validate(req.body);
-  
-      error
-        ? res.json({
-            status: "error",
-            message: error.message,
-          })
-        : next();
-    } catch (error) {
-      next(error);
-    }
+      joiValidation(schema, req, res, next)
+    
   };
 
 
   export const loginValidation = (req, res, next) => {
-    try {
+    
       //conditions
       const schema = Joi.object({
         email: Joi.string().email({ minDomainSegments: 2 }),
         password: Joi.string().required(),
       });
   
-      //compair
-      const { error } = schema.validate(req.body);
-  
-      error
-        ? res.json({
-            status: "error",
-            message: error.message,
-          })
-        : next();
-    } catch (error) {
-      next(error);
-    }
+      joiValidation(schema, req, res, next)
   };
 
   //otp 
   export const passResetValidation = (req, res, next) => {
-    try {
+  
       //conditions
       const schema = Joi.object({
         email: Joi.string().email({ minDomainSegments: 2 }),
@@ -105,16 +69,29 @@ export const emailVerificationValidation = (req, res, next) => {
         otp: Joi.string().required(),
       });
   
-      //compair
-      const { error } = schema.validate(req.body);
-  
-      error
-        ? res.json({
-            status: "error",
-            message: error.message,
-          })
-        : next();
-    } catch (error) {
-      next(error);
-    }
+      joiValidation(schema, req, res, next)
   };
+
+
+  // ================category validation
+
+export const updatCatValidation = (req, res, next) => {
+  const schema = Joi.object({
+    _id: Joi.string().required(),
+    name: Joi.string().required(),
+    status: Joi.string().required(),
+  });
+
+  joiValidation(schema, req, res, next);
+};
+
+export const updatepaymentmethodValidation = (req, res,next )=>{
+  const schema = Joi.object({
+    _id: Joi.string().required(),
+    name: Joi.string().required(),
+    status: Joi.string().required(),
+    description: Joi.string().required(),
+    
+  })
+  joiValidation(schema, req, res, next)
+}

@@ -19,9 +19,11 @@ app.use(morgan("dev"));
 
 // API routers
 import adminRouter from "./src/router/adminRouter.js";
-import categroryRouter from "./src/router/categoryRouter.js"
+import categoryRouter from "./src/router/categoryRouter.js"
+import paymentMethodRouter from "./src/router/paymentMethodsRouter.js"
 app.use("/api/v1/admin", adminRouter);
-app.use ("/api/v1/categoryRouter", categroryRouter)
+app.use ("/api/v1/category", categoryRouter);
+app.use("/api/v1/paymentMethods", paymentMethodRouter);
 
 // // API Router for reset password
 // import ResetpassRouter from './src/router/ResetpassRouter.js'
