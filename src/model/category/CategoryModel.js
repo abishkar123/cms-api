@@ -1,23 +1,23 @@
-import catgeorySchema from "./categorySchema.js";
+import categorySchema from './CategorySchema.js'
 
 export const createNewCategory = (obj) => {
-  return AdminSchema(obj).save();
+  return categorySchema(obj).save();
 };
 
 export const readCategories = () => {
-    return catgeorySchema.find();
+    return categorySchema.find();
   };
-
-export const getCategoryBYID = (filter, obj) => {
-  return catgeorySchema.findOneAndUpdate(filter, obj, { new: true });
+//@_id must be String
+export const getCategoryById = (_obj) => {
+  return categorySchema.findById(_íd);
 };
 
-export const updateCategory = (_id) => {
-    return catgeorySchema.findOneAndUpdate(filter, obj, { new: true });
+export const updateCategory = ({_id, ...rest}) => {
+    return categorySchema.findByIdAndUpdate(_id, rest, { new: true });
   };
 
 
 
 export const deleteCat  = (_id)=>{
-  return catgeorySchema.findById(filter);
+  return categorySchema.findByIdAndDelete(_id);
 }
