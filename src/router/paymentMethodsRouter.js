@@ -49,7 +49,7 @@ router.get("/", async (req, res, next)=>{
     }
 })
 //Delete paymentMethod
-router.delete("/_id?",async (req, res, next)=>{
+router.delete("/:_id?",async (req, res, next)=>{
     try{
         const {_id} = req.params
         const result = await deletepaymentMModel(_id)
@@ -78,7 +78,9 @@ router.delete("/_id?",async (req, res, next)=>{
 //Update PaymentMethod
 router.put("/", updatepaymentmethodValidation, async(req, res, next )=>{
     try{
+        
         const result = await updatepaymentMModel(req.body);
+
 
         if (result?._id) {
             return res.json({
