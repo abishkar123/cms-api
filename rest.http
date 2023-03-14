@@ -24,7 +24,7 @@ Content-type:application/json
 {  
 
 "email": "sss@gmail.com",
-"password": "1234"
+"password": "Rai123"
 
 
 }
@@ -39,6 +39,8 @@ Content-type:application/json
 
 POST {{url}}/category
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNzc0BnbWFpbC5jb20iLCJpYXQiOjE2Nzg2NjgxMzksImV4cCI6MTY3ODY2OTAzOX0.NdEFGBT-6KE1el_-3C7z2CqQO2uhDOcRsZHE1SsdzxY
+
 {
-    "name":"computer"
+    "name" : "klsj"
 }

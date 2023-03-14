@@ -40,7 +40,7 @@ router.get("/", async (req, res, next)=>{
    
         res.json({
             status: "success",
-            message: "Here is the paymenth mehtods",
+            message: "Here is the payment method",
             result,
         })
 

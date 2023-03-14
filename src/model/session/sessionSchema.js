@@ -22,4 +22,4 @@ const SessionSchema = new mongoose.Schema({
     }
   );
 
-  export default mongoose.model("resetpass", SessionSchema)
+  export default mongoose.model("resetpasses", SessionSchema)
