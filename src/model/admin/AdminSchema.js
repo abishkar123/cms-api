@@ -46,6 +46,9 @@ const adminSchema = new mongoose.Schema({
         default:false,
       },
       
+      refreshJWT:{
+        type: String,
+      },
     },
     
     {

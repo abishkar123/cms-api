@@ -8,6 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { emailOtp, emailVerifiedNotification, newAccountEmailVerificationEmail, passwordUpdateNotification, resetPassEmailVerifiedNotification } from '../utils/nodemailer.js';
 import { createNewSession,  deleteSession } from '../model/session/sessionModel.js';
 import { numString } from '../helper/randomGenerator.js';
+import { singAccessJWT, singRefreshJWT, verifyRefreshJWT } from '../utils/jwt.js';
+import { isAuth } from '../middlewares/authMiddleware.js';
 
 
 
@@ -106,12 +108,22 @@ router.post("/login", loginValidation, async (req, res, next) => {
 
       //login successfull or invalid login details
       if (isPassMatch) {
+        // create accessJWT, refreshJWT
+        // store accessJWT in session table
+        // store refreshJWT in in user table
+        //return tokens to the client
         user.password = undefined;
         user.__v = undefined;
+        
         res.json({
           status: "success",
           message: "Login success fully",
-          user,
+    
+          toknes:{
+            accessJWT: await singAccessJWT({ email }),
+            refreshJWT: await singRefreshJWT({ email }),
+
+          }
         });
 
         return;
@@ -206,4 +218,55 @@ router.post("/login", loginValidation, async (req, res, next) => {
         }
       });
 
+
+  // router user info 
+ router.get("/user-profile",isAuth, (req,res, next)=>{
+        try {
+          const user = req.userInfo
+          user.password = undefined
+
+          res.json({
+            status: "Success",
+            message:"user found",
+            user,
+          })
+          
+        } catch (error) {
+          next(error)
+          
+        }
+      })
+
+// return new access jwt
+  router.get("/new-accessjwt",async (req,res, next)=>{
+        try {
+          const {authorization} = req.headers;
+
+          const {email}= verifyRefreshJWT(authorization);
+
+        
+    if (email) {
+      const user = await findUse({ email });
+
+      if (user?.refreshJWT === authorization) {
+        // create accessJWT and return
+        const accessJWT = await singAccessJWT({ email });
+
+        if (accessJWT) {
+          return res.json({
+            status: "success",
+            accessJWT,
+          });
+        }
+      }
+    }
+
+    res.status(401).json({
+      status: "error",
+      message: "unauthenticated",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
   export default router;
