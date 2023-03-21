@@ -1,5 +1,6 @@
 import express from 'express'
-import { updatepaymentmethodValidation } from '../middlewares/joimiddleware.js';
+import { updatePMValidation } from '../middlewares/joimiddleware.js';
+
 import { createNewpaymentMethod, deletepaymentMModel, readpaymentMethod, updatepaymentMModel } from '../model/paymetMethods/PaymetMModel.js';
 const router = express.Router()
 
@@ -76,7 +77,7 @@ router.delete("/:_id?",async (req, res, next)=>{
 })
 
 //Update PaymentMethod
-router.put("/", updatepaymentmethodValidation, async(req, res, next )=>{
+router.put("/", updatePMValidation, async(req, res, next )=>{
     try{
         
         const result = await updatepaymentMModel(req.body);

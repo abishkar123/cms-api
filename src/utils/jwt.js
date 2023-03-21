@@ -28,7 +28,7 @@ import { createNewSession } from '../model/session/sessionModel.js';
     }
  };
 
-//refress
+//refresh
   export const singRefreshJWT = async payload =>{
     const refreshJWT = jwt.sign(payload, process.env.JWT_REFRESH,{
         expiresIn: "30d",
