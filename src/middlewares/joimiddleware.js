@@ -119,3 +119,30 @@ export const newProductValidation = (req, res, next) => {
 
   joiValidation(schema, req, res, next);
 };
+
+
+export const editProductValidation = (req, res, next) => {
+ 
+  req.body.salesPrice = req.body.salesPrice || 0;
+  req.body.salesStartDate = req.body.salesStartDate || null;
+  req.body.salesEndDate = req.body.salesEndDate || null;
+
+  const schema = Joi.object({
+    _id: SHORTREQUIRED,
+    status: SHORTSTR,
+    name: SHORTREQUIRED,
+    sku: SHORTREQUIRED,
+    qty: NUMREQUIRED,
+    price: NUMBER,
+    salesPrice: NUMBER,
+    ratings: NUMBER,
+    mainImage: SHORTSTR.allow("", null),
+    images: LONGSTR.allow("", null),
+    imgToDelete: LONGSTR.allow("", null),
+    salesStartDate: SHORTSTR.allow("", null),
+    salesEndDate: SHORTSTR.allow("", null),
+    description: LONGREQUIRED,
+  });
+
+  joiValidation(schema, req, res, next);
+};

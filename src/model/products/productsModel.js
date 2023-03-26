@@ -9,18 +9,20 @@ export const readallproduct = () =>{
 }
 
 
-export const getSingleProduct = (filter) =>{
-    return productSchema.findOne(filter)
-}
+export const getSingleProduct = (filter) => {
+  return productSchema.findOne(filter);
+ };
 
 export const getproductbyId= (_id) =>{
-  return productSchema.findOne(_id)
+  return productSchema.findById(_id)
 }
 
 
-export const updateProuct = (_id, obj) =>{
-    return productSchema.findByIdANDUpdate(_id, obj),{ new: true };
-}
+export const updateProuct = (_id, obj) => {
+  return productSchema.findByIdAndUpdate(_id, obj, { new: true });
+};
+
+
 export const deleteSignleProduct = (filter) => {
     return productSchema.findOneAndDelete(filter, obj);
   };

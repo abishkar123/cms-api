@@ -1,9 +1,9 @@
 import express from "express";
 
 import slugify from "slugify";
-import {  createproudct, deleteProducts, getproductbyId, readallproduct } from "../model/products/productsModel.js";
+import {  createproudct, deleteProducts, getproductbyId, readallproduct, updateProuct } from "../model/products/productsModel.js";
 import multer from "multer";
-import { newProductValidation } from "../middlewares/joimiddleware.js";
+import { editProductValidation, newProductValidation } from "../middlewares/joimiddleware.js";
 
 
 const router = express.Router();
@@ -26,8 +26,8 @@ const upload = multer({storage});
 router.get("/:_id?", async (req, res, next) => {
   try {
 
-    const {_id} = req.params
-    const products = _id ?await getproductbyId(_id) : await readallproduct()
+    const {_id} = req.params;
+    const products = _id ? await getproductbyId(_id) : await readallproduct()
     res.json({
       status: "success",
       message: "get all product list ",
@@ -76,24 +76,75 @@ router.post("/", upload.array("images",5), newProductValidation, async (req, res
 
 
 //Delete Products
-router.delete("/:_id?",async (req, res, next)=>{
-  try{
-      const {_id} = req.params
-      const result = await deleteProducts(_id)
-  
-      if(result?._id){
-          return res.json({
-              status: "success",
-              message: "successfully delte the products",
-          })
-      }
-          res.json({
-              status:"error",
-              message:"unable to delete the Products"
-          })
-  }catch(error){
-      next(error)
+
+router.delete("/", async (req, res, next) => {
+  try {
+    const ids = req.body;
+
+    const { deletedCount } = await deleteProducts(ids);
+
+    deletedCount
+      ? res.json({
+          status: "success",
+          message: "Selected products has been deleted.",
+        })
+      : res.json({
+          status: "erro",
+          message: "Unable to delete the products, please try again later",
+        });
+  } catch (error) {
+    next(error);
   }
-})
+});
+
+//Update Products
+
+router.put( "/", upload.array("newImages", 5),editProductValidation, async (req, res, next) => {
+    try {
+      // get the product id
+  
+      const { _id, ...rest } = req.body;
+      // set the new image path
+      // remove the deleted item
+      console.log(req.body)
+      console.log(_id)
+      const imgToDeletArg = req.body.imgToDelete.split(",");
+
+      // imgToDeletArg.map((item) => fs.unlinkSync(path.join(__dirname, item)));
+      //conert string to array
+      req.body.images = req.body?.images.split(",");
+
+      const oldImages =
+        req.body?.images?.filter((item) => !imgToDeletArg?.includes(item)) ||
+        [];
+
+      const newImages = req.files;
+
+      // image => req.files
+      const newImagesPath = newImages.map((item) => item.path);
+      req.body.images = [...oldImages, ...newImagesPath];
+      
+
+      const result = await updateProuct(_id, req.body);
+
+      //get form data
+      //get images
+
+      if (result?._id) {
+        return res.json({
+          status: "success",
+          message: "The product has been Updated!",
+        });
+      }
+
+      res.json({
+        status: "error",
+        message: "Error updating new product, contact administration",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default router;
