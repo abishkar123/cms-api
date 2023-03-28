@@ -16,6 +16,12 @@ const productSchema = new mongoose.Schema({
         unique: true,
         index: 1,
       },
+      parentCat: {
+        type: mongoose.Schema.Types.ObjectId,
+  
+        required: true,
+        default: "",
+      },
       qty: {
         type: Number,
         required: true,

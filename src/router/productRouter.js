@@ -108,7 +108,7 @@ router.put( "/", upload.array("newImages", 5),editProductValidation, async (req,
       // remove the deleted item
       console.log(req.body)
       console.log(_id)
-      const imgToDeletArg = req.body.imgToDelete.split(",");
+      const imgToDeletArg = req.body?.imgToDelete?.split(",") || [];
 
       // imgToDeletArg.map((item) => fs.unlinkSync(path.join(__dirname, item)));
       //conert string to array

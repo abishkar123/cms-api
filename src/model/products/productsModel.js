@@ -11,11 +11,17 @@ export const readallproduct = () =>{
 
 export const getSingleProduct = (filter) => {
   return productSchema.findOne(filter);
+
  };
 
+ 
 export const getproductbyId= (_id) =>{
   return productSchema.findById(_id)
 }
+
+export const getSelectedProduct = (filter) => {
+  return productSchema.find(filter);
+};
 
 
 export const updateProuct = (_id, obj) => {

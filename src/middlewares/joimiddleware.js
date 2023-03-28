@@ -124,15 +124,23 @@ export const newProductValidation = (req, res, next) => {
 export const editProductValidation = (req, res, next) => {
  
   req.body.salesPrice = req.body.salesPrice || 0;
-  req.body.salesStartDate = req.body.salesStartDate || null;
-  req.body.salesEndDate = req.body.salesEndDate || null;
+  req.body.salesStartDate =
+    !req.body.salesStartDate || req.body.salesStartDate === "null"
+      ? null
+      : req.body.salesStartDate;
+  req.body.salesEndDate =
+    !req.body.salesEndDate || req.body.salesEndDate === "null"
+      ? null
+      : req.body.salesEndDate;
 
+  console.log(req.body)
   const schema = Joi.object({
     _id: SHORTREQUIRED,
     status: SHORTSTR,
     name: SHORTREQUIRED,
     sku: SHORTREQUIRED,
     qty: NUMREQUIRED,
+    parentCat: SHORTREQUIRED,
     price: NUMBER,
     salesPrice: NUMBER,
     ratings: NUMBER,
