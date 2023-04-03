@@ -18,7 +18,6 @@ const productSchema = new mongoose.Schema({
       },
       parentCat: {
         type: mongoose.Schema.Types.ObjectId,
-  
         required: true,
         default: "",
       },
