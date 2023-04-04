@@ -1,10 +1,10 @@
-import SessionSchema from "./SessionSchema.js"
+import sessionSchema from "./sessionSchema.js"
 
 export const createNewSession = (obj)=>{
-    return SessionSchema(obj).save();
+    return sessionSchema(obj).save();
 }
 
 // delete sessions
 export const deleteSession = (filter)=>{
-    return SessionSchema.findOneAndDelete(filter);
+    return sessionSchema.findOneAndDelete(filter);
 }
