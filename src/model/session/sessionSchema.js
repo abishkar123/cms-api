@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const SessionSchema = new mongoose.Schema({
+const sessionSchema = new mongoose.Schema({
     status: {
         type: String,
         default: "inactive",
@@ -22,4 +22,4 @@ const SessionSchema = new mongoose.Schema({
     }
   );
 
-  export default mongoose.model("resetpasses", SessionSchema)
+  export default mongoose.model("resetpasses", sessionSchema)
