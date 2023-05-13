@@ -15,3 +15,10 @@ export const updateAdmin = (filter, obj) => {
 export const findUse  = (filter)=>{
   return AdminSchema.findOne(filter);
 }
+
+
+export const getUser = async() =>{
+  const db = await clientPromise.db("admin_users")
+
+  return await db.find()
+}

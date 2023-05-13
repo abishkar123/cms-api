@@ -29,6 +29,7 @@ import categoryRouter from "./src/router/categoryRouter.js"
 import paymentMethodRouter from "./src/router/paymentMethodsRouter.js"
 import{isAuth} from "./src/middlewares/authMiddleware.js"
 import productRouter from "./src/router/productRouter.js";
+import ordersRouter from './src/router/orderRouter.js'
 
 
 
@@ -36,6 +37,7 @@ app.use("/api/v1/admin", adminRouter);
 app.use ("/api/v1/category",isAuth, categoryRouter);
 app.use("/api/v1/paymentMethods",isAuth, paymentMethodRouter);
 app.use("/api/v1/product", isAuth, productRouter);
+app.use("/api/v1/orders", ordersRouter)
 
 // // API Router for reset password
 // import ResetpassRouter from './src/router/ResetpassRouter.js'

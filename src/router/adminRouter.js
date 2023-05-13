@@ -10,8 +10,16 @@ import { createNewSession,  deleteSession } from '../model/session/sessionModel.
 import { numString } from '../helper/randomGenerator.js';
 import { singAccessJWT, singRefreshJWT, verifyRefreshJWT } from '../utils/jwt.js';
 import { isAuth } from '../middlewares/authMiddleware.js';
+import { getUser } from '../../../../client-cms/api/src/model/user/UserModel.js';
 
 
+router.get("/",async (req, res)=>{
+  const users = await getUser()
+
+
+  console.log(users)
+  res.json({users})
+})
 
 //admin user loging
 router.post("/", (req, res, next) => {

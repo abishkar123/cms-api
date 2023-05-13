@@ -16,18 +16,12 @@ router.post("/", async (req, res, next)=>{
             return  res.json({
                 status: "success",
                 message: " Successfully register the payment Methods.",
-             
-            })
-            
+              })
         }
-
         res.json({
             status:"error",
             message:"cannot create new payment method"
         })
-
-       
-
     }catch(error){
         next(error)
     }
