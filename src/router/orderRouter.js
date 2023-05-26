@@ -42,4 +42,34 @@ router.get('/', async(req,res,next) => {
     next(error)
    }
 })
+
+router.delete("/:_id?", async(req,res,next) => {
+    await init()
+    try {
+        const {_id} = req.params
+        console.log(_id)
+ 
+     const result = await orders.deleteOne({_id})
+
+     console.log(result)
+   
+     if(result?._id){
+        return res.json({
+            status: "success",
+            message: "successfully delete Order",
+        })
+    }
+
+
+        res.json({
+            status:"error",
+            message:"unable to delete the order"
+        })
+
+     
+    } catch (error) {
+     next(error)
+    }
+ })
+
 export default router

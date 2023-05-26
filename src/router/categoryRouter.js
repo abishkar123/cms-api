@@ -82,6 +82,8 @@ router.put("/", updatCatValidation, async(req, res, next )=>{
         next(error);
     }
 })
+
+
 //delete category
 router.delete("/:_id?", async (req, res, next )=>{
     const {_id} = req.params
