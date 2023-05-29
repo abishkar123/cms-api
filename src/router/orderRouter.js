@@ -1,5 +1,7 @@
 import express from 'express'
 import clientPromise from '../config/dbConfig.js'
+import mongoose from 'mongoose'
+
 
 
 const router = express.Router()
@@ -15,7 +17,6 @@ async function init(){
         client = await clientPromise
         db = await client.db()
         orders = await db.collection('orders')
-        
         db && console.log('Mongo db connected!')
     } catch (error) {
         throw new Error('Failed to connect to db')
@@ -43,20 +44,23 @@ router.get('/', async(req,res,next) => {
    }
 })
 
-router.delete("/:_id?", async(req,res,next) => {
+router.delete("/:_id", async(req,res,next) => {
     await init()
     try {
         const {_id} = req.params
-        console.log(_id)
+        console.log(req.params)
+
  
-     const result = await orders.deleteOne({_id})
+     const result = await orders.deleteOne({_id:mongoose.Types.ObjectId(_id)})
 
      console.log(result)
-   
-     if(result?._id){
+
+
+     if(result?.deletedCount){
         return res.json({
             status: "success",
             message: "successfully delete Order",
+        
         })
     }
 
