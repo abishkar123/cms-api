@@ -1,6 +1,6 @@
 import express from 'express'
 import { emailVerificationValidation, loginValidation, newAdminValidation, passResetValidation } from '../middlewares/joimiddleware.js';
-import { createNewAdmin, findUse, updateAdmin } from '../model/admin/AdminModel.js';
+import { createNewAdmin, findUse, getUser, updateAdmin } from '../model/admin/AdminModel.js';
 import { comparePassword, hashPassword } from '../utils/bcrypt.js';
 
 const router = express.Router();
@@ -10,7 +10,7 @@ import { createNewSession,  deleteSession } from '../model/session/sessionModel.
 import { numString } from '../helper/randomGenerator.js';
 import { singAccessJWT, singRefreshJWT, verifyRefreshJWT } from '../utils/jwt.js';
 import { isAuth } from '../middlewares/authMiddleware.js';
-import { getUser } from '../../../../client-cms/api/src/model/user/UserModel.js';
+
 
 
 router.get("/",async (req, res)=>{
