@@ -7,6 +7,8 @@ import { editProductValidation, newProductValidation } from "../middlewares/joim
 
 
 const router = express.Router();
+
+
 const imgFolderPath = "public/img/products";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -22,6 +24,9 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage});
+
+
+
 
 router.get("/:_id?", async (req, res, next) => {
   try {

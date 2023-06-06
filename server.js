@@ -16,6 +16,7 @@ dbConnect();
 // server static files
 
 const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/client/build")))
 
 // middlewares
 app.use(cors());
