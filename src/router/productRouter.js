@@ -4,28 +4,34 @@ import slugify from "slugify";
 import {  createproudct, deleteProducts, getproductbyId, readallproduct, updateProuct } from "../model/products/productsModel.js";
 import multer from "multer";
 import { editProductValidation, newProductValidation } from "../middlewares/joimiddleware.js";
-
+import AWS from 'aws-sdk';
+import path from 'path'
 
 const router = express.Router();
 
 
+const __dirname = path.resolve();
 const imgFolderPath = "public/img/products";
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    let error = null;
-    // validation error check
-    cb(error, imgFolderPath);
-  },
-  filename: (req, file, cb) => {
-    let error = null;
-    const fullFileName = Date.now() + "_" + file.originalname;
-    cb(error, fullFileName);
-  },
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     let error = null;
+//     // validation error check
+//     cb(error, imgFolderPath);
+//   },
+//   filename: (req, file, cb) => {
+//     let error = null;
+//     const fullFileName = Date.now() + "_" + file.originalname;
+//     cb(error, fullFileName);
+//   },
+// });
+
+// const upload = multer({storage});
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB file size limit
 });
-
-const upload = multer({storage});
-
-
 
 
 router.get("/:_id?", async (req, res, next) => {
@@ -43,20 +49,64 @@ router.get("/:_id?", async (req, res, next) => {
   }
 });
 
-router.post("/", upload.array("images",5), newProductValidation, async (req, res, next) => {
+router.post("/", upload.array("images",5), async (req, res, next) => {
   try {
+    //form data => req.body
+
+
+    
+    const option = {
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION
+    }
+    AWS.config.update(option);
+    const s3 = new AWS.S3();
     //form data => req.body
 
     const newImages = req.files;
 
     // image => req.files
-    const images = newImages.map((item) => item.path);
+    // const images = newImages.map((item) => item.path);
+    // 
+
+    //upload image to s3
+    const uploadPromises = newImages.map((file) => {
+      console.log(file)
+      const params = {
+        Bucket: 'skrnsproduct',
+        Key: `${Date.now()}_${file.originalname}`,
+        Body: file.buffer,
+        // ACL: 'public-read',
+        ContentType: file.mimetype,
+      };
+
+      return s3.upload(params).promise();
+    });
+
+    const uploadResults = await Promise.all(uploadPromises);
+
+    const images = uploadResults.map((result) => result.Location)
     req.body.images = images;
+
+    //END upload image to s3
     req.body.mainImage = images[0];
-    req.body.slug = slugify(req.body.name, { trim: true, lower: true });
-    const result = await createproudct(req.body)
+    req.body.slug = slugify(req.body.name || '', { trim: true, lower: true });
+    const result = await createproudct(req.body);
     //get form data
     //get images
+
+
+    // const newImages = req.files;
+
+    // // image => req.files
+    // const images = newImages.map((item) => item.path);
+    // req.body.images = images;
+    // req.body.mainImage = images[0];
+    // req.body.slug = slugify(req.body.name, { trim: true, lower: true });
+    // const result = await createproudct(req.body)
+    // //get form data
+    // //get images
 
     if (result?._id) {
       return res.json({
